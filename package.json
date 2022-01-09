@@ -1,0 +1,24 @@
+{
+  "name": "clean-node-api",
+  "version": "1.0.0",
+  "description": "API em NodeJS com Clean Architecture e TDD (youtube/mango)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/judaemanuel/clean-node-api.git"
+  },
+  "keywords": [
+    "nodejs",
+    "clean-arch",
+    "tdd"
+  ],
+  "author": "judahemanuel@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/judaemanuel/clean-node-api/issues"
+  },
+  "homepage": "https://github.com/judaemanuel/clean-node-api#readme"
+}
