@@ -4,10 +4,14 @@
   "description": "API em NodeJS com Clean Architecture e TDD (youtube/mango)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "lint-staged": {
-    "*.js": ["standard"]
+    "*.js": [
+      "standard --fix",
+      "git add"
+    ]
   },
   "repository": {
     "type": "git",
@@ -25,6 +29,7 @@
   },
   "homepage": "https://github.com/judaemanuel/clean-node-api#readme",
   "devDependencies": {
+    "husky": "^7.0.0",
     "lint-staged": "^12.1.7",
     "standard": "^16.0.4"
   }
