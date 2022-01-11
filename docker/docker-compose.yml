@@ -10,11 +10,10 @@ services:
     container_name: mongo-db
     image: mongo
     restart: always
-    networks: 
+    networks:
       - devnet
     ports:
       - 27017:27017
-
   # mongo-db-express:
   #   container_name: mongo-db-express
   #   image: mongo-express
