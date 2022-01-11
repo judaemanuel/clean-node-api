@@ -16,6 +16,8 @@ module.exports = class LoginRouter {
     if (!password) {
       return HttpResponse.badRequest('password')
     }
-    this.authService.authenticate(email, password)
+    if (!this.authService.authenticate(email, password)) {
+      return HttpResponse.unauthorized()
+    }
   }
 }
