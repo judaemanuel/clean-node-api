@@ -46,6 +46,15 @@ const makeAuthServiceWithError = () => {
   return new AuthServiceMock()
 }
 
+const makeEmailValidatorWithError = () => {
+  class EmailValidatorMock {
+    isValid () {
+      throw new Error()
+    }
+  }
+  return new EmailValidatorMock()
+}
+
 describe('Login Router', () => {
   test('Should return 200 when valid credentials are provided', async () => {
     const { sut, authServiceMock } = makeSut()
@@ -152,9 +161,50 @@ describe('Login Router', () => {
     expect(httpResponse.body).toEqual(new InternalServerError())
   })
 
+  test('Should return 500 when no EmailValidator are provided', async () => {
+    const authServiceMock = makeAuthService()
+    const sut = new LoginRouter(authServiceMock)
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new InternalServerError())
+  })
+
+  test('Should return 500 when no EmailValidator has no isValid method', async () => {
+    const authServiceMock = makeAuthService()
+    const sut = new LoginRouter(authServiceMock, {})
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new InternalServerError())
+  })
+
   test('Should return 500 when AuthService throws', async () => {
     const authServiceMock = makeAuthServiceWithError()
     const sut = new LoginRouter(authServiceMock)
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+    const httpResponse = await sut.route(httpRequest)
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new InternalServerError())
+  })
+
+  test('Should return 500 when EmailValidator throws', async () => {
+    const sut = new LoginRouter(makeAuthService(), makeEmailValidatorWithError())
     const httpRequest = {
       body: {
         email: 'any_email@mail.com',

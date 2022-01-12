@@ -15,6 +15,7 @@ const makeSut = () => {
 const makeEmailValidator = () => {
   class EmailValidatorMock {
     isValid (email) {
+      this.email = email
       return this.isEmailValid
     }
   }
@@ -44,5 +45,17 @@ describe('Login Router', () => {
     await sut.route(httpRequest)
     expect(authServiceMock.email).toBe(httpRequest.body.email)
     expect(authServiceMock.password).toBe(httpRequest.body.password)
+  })
+
+  test('Should call AuthService with correct email', async () => {
+    const { sut, emailValidatorMock } = makeSut()
+    const httpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+        password: 'any_password'
+      }
+    }
+    await sut.route(httpRequest)
+    expect(emailValidatorMock.email).toBe(httpRequest.body.email)
   })
 })
