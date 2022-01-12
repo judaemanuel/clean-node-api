@@ -3,17 +3,17 @@ const UnauthorizedError = require('./unauthorized-error')
 const InternalServerError = require('./internal-server-error')
 
 module.exports = class HttpResponse {
-  static ok (accessToken) {
+  static ok (data) {
     return {
       statusCode: 200,
-      body: accessToken
+      body: data
     }
   }
 
-  static badRequest (paramName) {
+  static badRequest (error) {
     return {
       statusCode: 400,
-      body: new MissingParamError(paramName)
+      body: new MissingParamError(error)
     }
   }
 
