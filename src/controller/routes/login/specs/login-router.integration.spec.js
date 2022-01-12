@@ -11,7 +11,7 @@ const makeSut = () => {
 
 const makeAuthService = () => {
   class AuthServiceMock {
-    authenticate (email, password) {
+    async authenticate (email, password) {
       this.email = email
       this.password = password
       return this.accessToken
@@ -21,7 +21,7 @@ const makeAuthService = () => {
 }
 
 describe('Login Router', () => {
-  test('Should call AuthService with correct params', () => {
+  test('Should call AuthService with correct params', async () => {
     const { sut, authServiceMock } = makeSut()
     const httpRequest = {
       body: {
@@ -29,7 +29,7 @@ describe('Login Router', () => {
         password: 'any_password'
       }
     }
-    sut.route(httpRequest)
+    await sut.route(httpRequest)
     expect(authServiceMock.email).toBe(httpRequest.body.email)
     expect(authServiceMock.password).toBe(httpRequest.body.password)
   })
