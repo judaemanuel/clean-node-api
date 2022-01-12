@@ -1,18 +1,23 @@
 const LoginRouter = require('../login-router')
 
 const makeSut = () => {
-  class AuthServiceMock {
-    authenticate (email, password) {
-      this.email = email
-      this.password = password
-    }
-  }
-  const authServiceMock = new AuthServiceMock()
+  const authServiceMock = makeAuthService()
   const sut = new LoginRouter(authServiceMock)
   return {
     sut,
     authServiceMock
   }
+}
+
+const makeAuthService = () => {
+  class AuthServiceMock {
+    authenticate (email, password) {
+      this.email = email
+      this.password = password
+      return this.accessToken
+    }
+  }
+  return new AuthServiceMock()
 }
 
 describe('Login Router', () => {
