@@ -2,11 +2,23 @@ const LoginRouter = require('../login-router')
 
 const makeSut = () => {
   const authServiceMock = makeAuthService()
-  const sut = new LoginRouter(authServiceMock)
+  const emailValidatorMock = makeEmailValidator()
+  emailValidatorMock.isEmailValid = true
+  const sut = new LoginRouter(authServiceMock, emailValidatorMock)
   return {
     sut,
-    authServiceMock
+    authServiceMock,
+    emailValidatorMock
   }
+}
+
+const makeEmailValidator = () => {
+  class EmailValidatorMock {
+    isValid (email) {
+      return this.isEmailValid
+    }
+  }
+  return new EmailValidatorMock()
 }
 
 const makeAuthService = () => {
