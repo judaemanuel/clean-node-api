@@ -1,8 +1,5 @@
 const LoginRouter = require('../login-router')
-const MissingParamError = require('../../../shared/helpers/missing-param-error')
-const UnauthorizedError = require('../../../shared/helpers/unauthorized-error')
-const InternalServerError = require('../../../shared/helpers/internal-server-error')
-const InvalidParamError = require('../../../shared/helpers/invalid-param-error')
+const { MissingParamError, UnauthorizedError, InternalServerError, InvalidParamError } = require('../../../shared/helpers/errors')
 
 const makeSut = () => {
   const authServiceMock = makeAuthService()
