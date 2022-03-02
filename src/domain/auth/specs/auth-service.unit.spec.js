@@ -22,24 +22,32 @@ class UserRepositoryMock {
   }
 }
 
+const makeSut = () => {
+  const userRepositoryMock = new UserRepositoryMock()
+  const sut = new AuthService(userRepositoryMock)
+  return {
+    sut,
+    userRepositoryMock
+  }
+}
+
 describe('Auth Service', () => {
   test('Should throw if no email is provided', async () => {
-    const sut = new AuthService()
+    const { sut } = makeSut()
     const promisse = sut.authenticate()
 
     expect(promisse).rejects.toThrow(new MissingParamError('email'))
   })
 
   test('Should throw if no password is provided', async () => {
-    const sut = new AuthService()
+    const { sut } = makeSut()
     const promisse = sut.authenticate('any_email@mail.com')
 
     expect(promisse).rejects.toThrow(new MissingParamError('password'))
   })
 
   test('Should call UserRepository GetUserByEmail with correct email', async () => {
-    const userRepositoryMock = new UserRepositoryMock()
-    const sut = new AuthService(userRepositoryMock)
+    const { sut, userRepositoryMock } = makeSut()
     await sut.authenticate('any_email@mail.com', 'any_password')
 
     expect(userRepositoryMock.email).toBe('any_email@mail.com')
