@@ -16,5 +16,6 @@ module.exports = class AuthService {
     if (!user) {
       return null
     }
+    return null
   }
 }
