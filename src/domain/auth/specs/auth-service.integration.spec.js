@@ -1,4 +1,3 @@
-const { MissingParamError, InvalidParamError } = require('../../../shared/global/errors')
 const AuthService = require('../auth-service')
 
 class UserRepositoryMock {
@@ -26,13 +25,13 @@ describe('Auth Service', () => {
   test('Should throw if no UserRepository is provided', async () => {
     const sut = new AuthService()
     const promise = sut.authenticate('any_email@mail.com', 'any_password')
-    expect(promise).rejects.toThrow(new MissingParamError('UserRepository'))
+    expect(promise).rejects.toThrow()
   })
 
   test('Should throw if no UserRepository has no getUserByEmail method', async () => {
     const sut = new AuthService({})
     const promise = sut.authenticate('any_email@mail.com', 'any_password')
-    expect(promise).rejects.toThrow(new InvalidParamError('UserRepository'))
+    expect(promise).rejects.toThrow()
   })
 
   test('Should return null if UserRepository getUserByEmail returns null', async () => {

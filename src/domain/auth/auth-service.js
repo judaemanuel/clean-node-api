@@ -1,4 +1,4 @@
-const { MissingParamError, InvalidParamError } = require('../../shared/global/errors')
+const { MissingParamError } = require('../../shared/global/errors')
 
 module.exports = class AuthService {
   constructor (UserRepository) {
@@ -11,12 +11,6 @@ module.exports = class AuthService {
     }
     if (!password) {
       throw new MissingParamError('password')
-    }
-    if (!this.UserRepository) {
-      throw new MissingParamError('UserRepository')
-    }
-    if (!this.UserRepository.getUserByEmail) {
-      throw new InvalidParamError('UserRepository')
     }
     const user = await this.UserRepository.getUserByEmail(email)
     if (!user) {
