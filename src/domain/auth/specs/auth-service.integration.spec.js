@@ -106,4 +106,13 @@ describe('Auth Service', () => {
 
     expect(tokenGeneratorMock.userId).toBe(userRepositoryMock.user.id)
   })
+
+  test('Should return an accessToken if correct credentials are provided', async () => {
+    const { sut, tokenGeneratorMock } = makeSut()
+    tokenGeneratorMock.userId = 'any_id'
+    const accessToken = await sut.authenticate('valid_email@mail.com', 'valid_password')
+
+    expect(accessToken).toBe(tokenGeneratorMock.accessToken)
+    expect(accessToken).toBeTruthy()
+  })
 })
