@@ -1,8 +1,9 @@
 const { MissingParamError } = require('../../shared/global/errors')
 
 module.exports = class AuthService {
-  constructor (UserRepository) {
-    this.UserRepository = UserRepository
+  constructor (userRepository, encrypter) {
+    this.userRepository = userRepository
+    this.encrypter = encrypter
   }
 
   async authenticate (email, password) {
@@ -12,10 +13,11 @@ module.exports = class AuthService {
     if (!password) {
       throw new MissingParamError('password')
     }
-    const user = await this.UserRepository.getUserByEmail(email)
+    const user = await this.userRepository.getUserByEmail(email)
     if (!user) {
       return null
     }
+    await this.encrypter.compare(password, user.password)
     return null
   }
 }
