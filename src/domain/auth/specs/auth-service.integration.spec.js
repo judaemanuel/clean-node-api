@@ -1,23 +1,33 @@
 const AuthService = require('../auth-service')
 
-class UserRepositoryMock {
-  async getUserByEmail (email) {
-    this.email = email
-    return this.user
+const makeUserRepository = () => {
+  class UserRepositoryMock {
+    async getUserByEmail (email) {
+      this.email = email
+      return this.user
+    }
   }
+  const userRepositoryMock = new UserRepositoryMock()
+  userRepositoryMock.user = { password: 'hashed_password' }
+  return userRepositoryMock
 }
 
-class EncryptedMock {
-  async compare (password, hashedPassword) {
-    this.password = password
-    this.hashedPassword = hashedPassword
+const makeEncrypter = () => {
+  class EncryptedMock {
+    async compare (password, hashedPassword) {
+      this.password = password
+      this.hashedPassword = hashedPassword
+      return this.isValid
+    }
   }
+  const encrypterMock = new EncryptedMock()
+  encrypterMock.isValid = true
+  return encrypterMock
 }
 
 const makeSut = () => {
-  const userRepositoryMock = new UserRepositoryMock()
-  userRepositoryMock.user = { password: 'hashed_password' }
-  const encrypterMock = new EncryptedMock()
+  const userRepositoryMock = makeUserRepository()
+  const encrypterMock = makeEncrypter()
   const sut = new AuthService(userRepositoryMock, encrypterMock)
   return {
     sut,
@@ -45,10 +55,17 @@ describe('Auth Service', () => {
     expect(promise).rejects.toThrow()
   })
 
-  test('Should return null if an invalid email or password is provided', async () => {
+  test('Should return null if an invalid email is provided', async () => {
     const { sut, userRepositoryMock } = makeSut()
     userRepositoryMock.user = null
-    const accessToken = await sut.authenticate('any_email@mail.com', 'any_password')
+    const accessToken = await sut.authenticate('invalid_email@mail.com', 'any_password')
+    expect(accessToken).toBe(null)
+  })
+
+  test('Should return null if an invalid password is provided', async () => {
+    const { sut, encrypterMock } = makeSut()
+    encrypterMock.isValid = false
+    const accessToken = await sut.authenticate('any_email@mail.com', 'invalid_password')
     expect(accessToken).toBe(null)
   })
 

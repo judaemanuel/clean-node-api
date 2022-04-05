@@ -1,14 +1,20 @@
 const { MissingParamError } = require('../../../shared/global/errors')
 const AuthService = require('../auth-service')
 
-class UserRepositoryMock {
-  async getUserByEmail (email) {
-    this.email = email
+const makeUserRepository = () => {
+  class UserRepositoryMock {
+    async getUserByEmail (email) {
+      this.email = email
+      return this.user
+    }
   }
+  const userRepositoryMock = new UserRepositoryMock()
+  userRepositoryMock.user = { password: 'hashed_password' }
+  return userRepositoryMock
 }
 
 const makeSut = () => {
-  const userRepositoryMock = new UserRepositoryMock()
+  const userRepositoryMock = makeUserRepository()
   const sut = new AuthService(userRepositoryMock)
   return {
     sut,
