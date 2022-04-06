@@ -15,6 +15,15 @@ const makeUserRepository = () => {
   return userRepositoryMock
 }
 
+const makeUserRepositoryWithError = () => {
+  class UserRepositoryMock {
+    async load () {
+      throw new Error()
+    }
+  }
+  return new UserRepositoryMock()
+}
+
 const makeEncrypter = () => {
   class EncryptedMock {
     async compare (password, hashedPassword) {
@@ -131,6 +140,19 @@ describe('Auth Service', () => {
         userRepository,
         encrypter,
         tokenGenerator: invalid
+      })
+    )
+
+    for (const sut of suts) {
+      const promise = sut.authenticate('any_email@mail.com', 'any_password')
+      expect(promise).rejects.toThrow()
+    }
+  })
+
+  test('Should throw if dependency throws', async () => {
+    const suts = [].concat(
+      new AuthService({
+        userRepository: makeUserRepositoryWithError()
       })
     )
 
