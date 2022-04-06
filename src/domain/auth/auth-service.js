@@ -23,6 +23,8 @@ module.exports = class AuthService {
     if (!isValid) {
       return null
     }
-    return await this.tokenGenerator.generate(user.id)
+    const accessToken = await this.tokenGenerator.generate(user.id)
+    await this.userRepository.update(user.id, accessToken)
+    return accessToken
   }
 }

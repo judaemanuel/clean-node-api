@@ -6,6 +6,11 @@ const makeUserRepository = () => {
       this.email = email
       return this.user
     }
+
+    async update (userId, accessToken) {
+      this.userId = userId
+      this.accessToken = accessToken
+    }
   }
   const userRepositoryMock = new UserRepositoryMock()
   userRepositoryMock.user = {
@@ -131,6 +136,14 @@ describe('Auth Service', () => {
 
     expect(accessToken).toBe(tokenGeneratorMock.accessToken)
     expect(accessToken).toBeTruthy()
+  })
+
+  test('Should call UpdateAccesTokenRepository with correct values', async () => {
+    const { sut, userRepositoryMock, tokenGeneratorMock } = makeSut()
+    await sut.authenticate('valid_email@mail.com', 'valid_password')
+
+    expect(userRepositoryMock.userId).toBe(userRepositoryMock.user.id)
+    expect(userRepositoryMock.accessToken).toBe(tokenGeneratorMock.accessToken)
   })
 
   test('Should throw if invalid dependencies are provided', async () => {
