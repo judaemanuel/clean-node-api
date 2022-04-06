@@ -65,6 +65,13 @@ describe('Auth Service', () => {
     expect(userRepositoryMock.email).toBe('any_email@mail.com')
   })
 
+  test('Should throw if no dependency is provided', async () => {
+    const sut = new AuthService()
+    const promise = sut.authenticate('any_email@mail.com', 'any_password')
+
+    expect(promise).rejects.toThrow()
+  })
+
   test('Should throw if no UserRepository is provided', async () => {
     const sut = new AuthService({})
     const promise = sut.authenticate('any_email@mail.com', 'any_password')

@@ -5,7 +5,7 @@ module.exports = class AuthService {
     userRepository,
     encrypter,
     tokenGenerator
-  }) {
+  } = { }) {
     this.userRepository = userRepository
     this.encrypter = encrypter
     this.tokenGenerator = tokenGenerator
