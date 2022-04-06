@@ -65,27 +65,6 @@ describe('Auth Service', () => {
     expect(userRepositoryMock.email).toBe('any_email@mail.com')
   })
 
-  test('Should throw if no dependency is provided', async () => {
-    const sut = new AuthService()
-    const promise = sut.authenticate('any_email@mail.com', 'any_password')
-
-    expect(promise).rejects.toThrow()
-  })
-
-  test('Should throw if no UserRepository is provided', async () => {
-    const sut = new AuthService({})
-    const promise = sut.authenticate('any_email@mail.com', 'any_password')
-
-    expect(promise).rejects.toThrow()
-  })
-
-  test('Should throw if no UserRepository has no getUserByEmail method', async () => {
-    const sut = new AuthService({ userRepository: {} })
-    const promise = sut.authenticate('any_email@mail.com', 'any_password')
-
-    expect(promise).rejects.toThrow()
-  })
-
   test('Should return null if an invalid email is provided', async () => {
     const { sut, userRepositoryMock } = makeSut()
     userRepositoryMock.user = null
@@ -125,5 +104,39 @@ describe('Auth Service', () => {
 
     expect(accessToken).toBe(tokenGeneratorMock.accessToken)
     expect(accessToken).toBeTruthy()
+  })
+
+  test('Should throw if invalid dependencies are provided', async () => {
+    const invalid = {}
+    const userRepository = makeUserRepository()
+    const encrypter = makeEncrypter()
+    const suts = [].concat(
+      new AuthService(),
+      new AuthService({}),
+      new AuthService({
+        userRepository: invalid
+      }),
+      new AuthService({
+        userRepository
+      }),
+      new AuthService({
+        userRepository,
+        encrypter: invalid
+      }),
+      new AuthService({
+        userRepository,
+        encrypter
+      }),
+      new AuthService({
+        userRepository,
+        encrypter,
+        tokenGenerator: invalid
+      })
+    )
+
+    for (const sut of suts) {
+      const promise = sut.authenticate('any_email@mail.com', 'any_password')
+      expect(promise).rejects.toThrow()
+    }
   })
 })
