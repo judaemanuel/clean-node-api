@@ -1,7 +1,11 @@
 const { MissingParamError } = require('../../shared/global/errors')
 
 module.exports = class AuthService {
-  constructor (userRepository, encrypter, tokenGenerator) {
+  constructor ({
+    userRepository,
+    encrypter,
+    tokenGenerator
+  }) {
     this.userRepository = userRepository
     this.encrypter = encrypter
     this.tokenGenerator = tokenGenerator

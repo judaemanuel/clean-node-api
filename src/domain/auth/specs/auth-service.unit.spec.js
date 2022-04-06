@@ -15,7 +15,7 @@ const makeUserRepository = () => {
 
 const makeSut = () => {
   const userRepositoryMock = makeUserRepository()
-  const sut = new AuthService(userRepositoryMock)
+  const sut = new AuthService({ userRepository: userRepositoryMock })
   return {
     sut,
     userRepositoryMock

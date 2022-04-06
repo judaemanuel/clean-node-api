@@ -44,7 +44,11 @@ const makeSut = () => {
   const userRepositoryMock = makeUserRepository()
   const encrypterMock = makeEncrypter()
   const tokenGeneratorMock = makeTokenGenerator()
-  const sut = new AuthService(userRepositoryMock, encrypterMock, tokenGeneratorMock)
+  const sut = new AuthService({
+    userRepository: userRepositoryMock,
+    encrypter: encrypterMock,
+    tokenGenerator: tokenGeneratorMock
+  })
   return {
     sut,
     userRepositoryMock,
@@ -62,14 +66,14 @@ describe('Auth Service', () => {
   })
 
   test('Should throw if no UserRepository is provided', async () => {
-    const sut = new AuthService()
+    const sut = new AuthService({})
     const promise = sut.authenticate('any_email@mail.com', 'any_password')
 
     expect(promise).rejects.toThrow()
   })
 
   test('Should throw if no UserRepository has no getUserByEmail method', async () => {
-    const sut = new AuthService({})
+    const sut = new AuthService({ userRepository: {} })
     const promise = sut.authenticate('any_email@mail.com', 'any_password')
 
     expect(promise).rejects.toThrow()
