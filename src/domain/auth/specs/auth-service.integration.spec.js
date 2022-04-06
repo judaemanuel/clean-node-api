@@ -17,7 +17,7 @@ const makeUserRepository = () => {
 
 const makeUserRepositoryWithError = () => {
   class UserRepositoryMock {
-    async load () {
+    async getUserByEmail () {
       throw new Error()
     }
   }
@@ -37,6 +37,15 @@ const makeEncrypter = () => {
   return encrypterMock
 }
 
+const makeEncrypterWithError = () => {
+  class EncryptedMock {
+    async compare () {
+      throw new Error()
+    }
+  }
+  return new EncryptedMock()
+}
+
 const makeTokenGenerator = () => {
   class TokenGeneratorMock {
     async generate (userId) {
@@ -47,6 +56,15 @@ const makeTokenGenerator = () => {
   const tokenGeneratorMock = new TokenGeneratorMock()
   tokenGeneratorMock.accessToken = 'any_token'
   return tokenGeneratorMock
+}
+
+const makeTokenGeneratorWithError = () => {
+  class TokenGeneratorMock {
+    async generate () {
+      throw new Error()
+    }
+  }
+  return new TokenGeneratorMock()
 }
 
 const makeSut = () => {
@@ -150,9 +168,20 @@ describe('Auth Service', () => {
   })
 
   test('Should throw if dependency throws', async () => {
+    const userRepository = makeUserRepository()
+    const encrypter = makeEncrypter()
     const suts = [].concat(
       new AuthService({
         userRepository: makeUserRepositoryWithError()
+      }),
+      new AuthService({
+        userRepository,
+        encrypter: makeEncrypterWithError()
+      }),
+      new AuthService({
+        userRepository,
+        encrypter,
+        tokenGenerator: makeTokenGeneratorWithError()
       })
     )
 
