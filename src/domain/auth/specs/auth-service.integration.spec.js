@@ -7,7 +7,7 @@ const makeUserRepository = () => {
       return this.user
     }
 
-    async update (userId, accessToken) {
+    async updateUserAccessToken (userId, accessToken) {
       this.userId = userId
       this.accessToken = accessToken
     }
@@ -138,7 +138,7 @@ describe('Auth Service', () => {
     expect(accessToken).toBeTruthy()
   })
 
-  test('Should call UpdateAccesTokenRepository with correct values', async () => {
+  test('Should call UserRepository updateUserAccessToken token with correct values', async () => {
     const { sut, userRepositoryMock, tokenGeneratorMock } = makeSut()
     await sut.authenticate('valid_email@mail.com', 'valid_password')
 

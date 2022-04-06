@@ -24,7 +24,7 @@ module.exports = class AuthService {
       return null
     }
     const accessToken = await this.tokenGenerator.generate(user.id)
-    await this.userRepository.update(user.id, accessToken)
+    await this.userRepository.updateUserAccessToken(user.id, accessToken)
     return accessToken
   }
 }
