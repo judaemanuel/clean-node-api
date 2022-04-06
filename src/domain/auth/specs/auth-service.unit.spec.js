@@ -7,9 +7,17 @@ const makeUserRepository = () => {
       this.email = email
       return this.user
     }
+
+    async updateUserAccessToken (userId, accessToken) {
+      this.userId = userId
+      this.accessToken = accessToken
+    }
   }
   const userRepositoryMock = new UserRepositoryMock()
-  userRepositoryMock.user = { password: 'hashed_password' }
+  userRepositoryMock.user = {
+    id: 'any_id',
+    password: 'hashed_password'
+  }
   return userRepositoryMock
 }
 
